@@ -1,9 +1,19 @@
+/*
+ * This file showcases different ways of accessing a variable
+ */
+
 #include <iostream>
 #include <array>
 #include <unistd.h>
 
 #include "functions.hpp"
 using namespace std;
+
+/*
+ * Declaration of a reference without instantiation is not allowed
+ * The line below will not compile:
+ * int & my_reference;
+ */
 
 void pass_by_value(int arg) {
     printf("arg: %p:%d\n", (void *) &arg, arg);
