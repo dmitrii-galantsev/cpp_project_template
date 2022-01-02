@@ -1,0 +1,38 @@
+#include <iostream>
+#include <array>
+#include <unistd.h>
+
+#include "functions.hpp"
+using namespace std;
+
+void pass_by_value(int arg) {
+    printf("arg: %p:%d\n", (void *) &arg, arg);
+    arg++;
+    printf("arg: %p:%d\n", (void *) &arg, arg);
+}
+
+void pass_by_reference(int & arg) {
+    printf("arg: %p:%d\n", (void *) &arg, arg);
+    arg++;
+    printf("arg: %p:%d\n", (void *) &arg, arg);
+}
+
+void pass_by_pointer(int * arg) {
+    printf("arg: %p:%d\n", (void *) arg, *arg);
+    (*arg)++;
+    printf("arg: %p:%d\n", (void *) arg, *arg);
+}
+
+void run_functions() {
+    int my_int = 0;
+    printf("initial\n");
+    printf("my_int = %d\n\n", my_int);
+
+    printf("pass_by_value\n");
+    pass_by_value(my_int);
+    printf("my_int = %d\n\n", my_int);
+
+    printf("pass_by_reference\n");
+    pass_by_reference(my_int);
+    printf("my_int = %d\n\n", my_int);
+}
