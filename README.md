@@ -1,16 +1,14 @@
 # This is a WIP C++ template repository
 
 ### How to compile
-1. `mkdir build`
-2. `cd build`
-3. `cmake ../`
-4. `cmake --build ./`
+1. `cmake -B build`
+2. `make -C build -j $(nproc)`
 
 ### How to run
-- `./main`
+- `./build/main`
 
 ### How to test
-- `./functions/functions_test`  
-or  
-- `cd functions`
+- `./build/functions/functions_test`
+or
+- `cd build/functions`
 - `ctest`

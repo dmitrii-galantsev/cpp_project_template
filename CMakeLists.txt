@@ -1,26 +1,89 @@
-cmake_minimum_required (VERSION 3.11)
+cmake_minimum_required(VERSION 3.11)
 
-project(basic-cpp-features
-  LANGUAGES CXX
-)
+set(CMAKE_MODULE_PATH
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/"
+    CACHE INTERNAL "Default module path.")
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+option(CMAKE_VERBOSE_MAKEFILE "Enable verbose output" ON)
+option(CMAKE_EXPORT_COMPILE_COMMANDS "Export compile commands for linters and autocompleters" ON)
 
-# fetch google test
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+project(main LANGUAGES CXX)
 
-#add_executable(ftxui-starter src/main.cpp)
+option(BUILD_TESTS "Build test suite" OFF)
+
+set(CMAKE_CXX_STANDARD
+    11
+    CACHE STRING "The C++ standard to use")
+
+# Include CMAKE_INSTALL_* variables
+# this must go after project()
+include(GNUInstallDirs)
+
 add_subdirectory(functions)
+add_executable(main main.cpp)
+target_link_libraries(main functions_lib)
 
-set(BINARY main)
-set(SOURCES ${BINARY}.cpp)
-add_executable(${BINARY} ${SOURCES})
-target_link_libraries(${BINARY} functions_lib)
+if(BUILD_TESTS)
+    add_subdirectory("tests")
+endif()
+
+### Useful debug stuff
+
+# print variables
+include(CMakePrintHelpers)
+cmake_print_variables(CMAKE_CXX_STANDARD)
+
+# function to print vars
+function(print)
+    message("--")
+    cmake_print_variables(${ARGN})
+endfunction()
+
+function(print_fatal)
+    print(${ARGN})
+    message(FATAL_ERROR "--- last print")
+endfunction()
+
+print(CMAKE_CXX_STANDARD BUILD_TESTS)
+#print_fatal(CMAKE_CXX_STANDARD BUILD_TESTS)
+
+# print properties
+cmake_print_properties(TARGETS main
+    PROPERTIES
+    INCLUDE_DIRECTORIES
+    LINK_LIBRARIES)
+cmake_print_properties(SOURCES main
+    PROPERTIES
+    LOCATION)
+
+# trace a run
+# trace CMakeLists.txt line-by-line:
+#       cmake -B build --trace-source=CMakeLists.txt
+# add '--trace-expand' to expand the variables
+
+### Finding packages
+
+# add package search paths
+#set(CMAKE_PREFIX_PATH
+#    ${CMAKE_PREFIX_PATH}
+#    /usr/local
+#    )
+#set(CMAKE_LIBRARY_PATH
+#    ${CMAKE_LIBRARY_PATH}
+#    /usr/lib64
+#    /usr/lib/x86_64-linux-gnu
+#    )
+
+# find lib
+#find_library(LIB_CAP
+#    NAMES cap
+#    REQUIRED)
+
+# find package (preferred!)
+#find_package(protobuf
+#    HINTS ${GRPC_ROOT}
+#    CONFIG REQUIRED)
+#find_package(gRPC ${GRPC_DESIRED_VERSION}
+#    HINTS ${GRPC_ROOT}
+#    CONFIG REQUIRED)
+

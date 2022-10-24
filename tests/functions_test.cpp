@@ -1,5 +1,5 @@
+#include "functions.hpp"
 #include <gtest/gtest.h>
-#include "../functions.hpp"
 
 TEST(HelloTest, GtestSetup) {
     EXPECT_STRNE("hello", "world");
