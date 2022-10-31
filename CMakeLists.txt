@@ -29,23 +29,23 @@ endif()
 
 ### Useful debug stuff
 
+### TODO: DELETE
 # print variables
 include(CMakePrintHelpers)
 cmake_print_variables(CMAKE_CXX_STANDARD)
-
 # function to print vars
 function(print)
     message("--")
     cmake_print_variables(${ARGN})
 endfunction()
-
 function(print_fatal)
     print(${ARGN})
     message(FATAL_ERROR "--- last print")
 endfunction()
 
-print(CMAKE_CXX_STANDARD BUILD_TESTS)
+print(CMAKE_CXX_STANDARD)
 #print_fatal(CMAKE_CXX_STANDARD BUILD_TESTS)
+### TODO: DELETE
 
 # print properties
 cmake_print_properties(TARGETS main
