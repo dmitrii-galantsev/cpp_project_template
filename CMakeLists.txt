@@ -42,9 +42,6 @@ function(print_fatal)
     print(${ARGN})
     message(FATAL_ERROR "--- last print")
 endfunction()
-
-print(CMAKE_CXX_STANDARD)
-#print_fatal(CMAKE_CXX_STANDARD BUILD_TESTS)
 ### TODO: DELETE
 
 # print properties
