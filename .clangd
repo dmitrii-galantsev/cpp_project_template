@@ -8,28 +8,16 @@ Diagnostics:
     UnusedIncludes: Strict
     ClangTidy:
         Add: [
-            abseil*,
-            bugprone*,
-            clang-analyzer*,
-            misc*,
-            modernize*,
-            performance*,
-            readability*,
+          abseil*,
+          bugprone*,
+          clang-analyzer*,
+          misc*,
+          modernize*,
+          performance*,
+          readability*,
+          cppcoreguidelines*,
         ]
         Remove: [
-            bugprone-easily-swappable-parameters,
-            bugprone-reserved-identifier,
-            bugprone-suspicious-string-compare,
-            cppcoreguidelines*,
-            modernize-avoid-c-arrays,
-            modernize-use-nodiscard,
-            modernize-use-trailing-return-type,
-            modernize-use-using,
-            readability-convert-member-functions-to-static,
-            readability-function-cognitive-complexity,
-            readability-identifier-length,
-            readability-implicit-bool-conversion,
-            readability-magic-numbers,
-            readability-make-member-function-const,
+          cppcoreguidelines-pro*,
         ]
         #CheckOptions:

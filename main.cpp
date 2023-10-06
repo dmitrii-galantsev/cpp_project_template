@@ -1,10 +1,9 @@
-#include <iostream>
-#include <array>
-#include <unistd.h>
+// Copyright TEST
+
 #include "functions/functions.hpp"
 
-int main() {
-    run_functions();
+auto main() -> int {
+  run_functions();
 
-    return 0;
+  return 0;
 }

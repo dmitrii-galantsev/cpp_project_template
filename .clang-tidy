@@ -1,0 +1,10 @@
+Checks:
+  abseil*,
+  bugprone*,
+  clang-analyzer*,
+  misc*,
+  modernize*,
+  performance*,
+  readability*,
+  cppcoreguidelines*,
+  -cppcoreguidelines-pro*,
