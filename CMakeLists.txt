@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_MODULE_PATH
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/"
@@ -13,8 +13,24 @@ option(BUILD_TESTS "Build test suite" OFF)
 option(ADDRESS_SANITIZER "Enable address sanitizer" OFF)
 
 set(CMAKE_CXX_STANDARD
-    11
+    17
     CACHE STRING "The C++ standard to use")
+set(CMAKE_CXX_STANDARD_REQUIRED
+    ON
+    CACHE BOOL "")
+set(CMAKE_CXX_EXTENSIONS
+    OFF
+    CACHE BOOL "")
+
+if(CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.4.0)
+    message("Compiler version is " ${CMAKE_CXX_COMPILER_VERSION})
+    message(FATAL_ERROR "Require at least gcc-5.4.0")
+endif()
+
+# Clang does not set the build-id
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--build-id=sha1")
+endif()
 
 ## Add address sanitizer
 if(${ADDRESS_SANITIZER})
@@ -55,42 +71,10 @@ endfunction()
 ### TODO: DELETE
 
 # print properties
-cmake_print_properties(TARGETS main
-    PROPERTIES
-    INCLUDE_DIRECTORIES
-    LINK_LIBRARIES)
-cmake_print_properties(SOURCES main
-    PROPERTIES
-    LOCATION)
+cmake_print_properties(TARGETS main PROPERTIES INCLUDE_DIRECTORIES LINK_LIBRARIES)
+cmake_print_properties(SOURCES main PROPERTIES LOCATION)
 
 # trace a run
 # trace CMakeLists.txt line-by-line:
 #       cmake -B build --trace-source=CMakeLists.txt
 # add '--trace-expand' to expand the variables
-
-### Finding packages
-
-# add package search paths
-#set(CMAKE_PREFIX_PATH
-#    ${CMAKE_PREFIX_PATH}
-#    /usr/local
-#    )
-#set(CMAKE_LIBRARY_PATH
-#    ${CMAKE_LIBRARY_PATH}
-#    /usr/lib64
-#    /usr/lib/x86_64-linux-gnu
-#    )
-
-# find lib
-#find_library(LIB_CAP
-#    NAMES cap
-#    REQUIRED)
-
-# find package (preferred!)
-#find_package(protobuf
-#    HINTS ${GRPC_ROOT}
-#    CONFIG REQUIRED)
-#find_package(gRPC ${GRPC_DESIRED_VERSION}
-#    HINTS ${GRPC_ROOT}
-#    CONFIG REQUIRED)
-
