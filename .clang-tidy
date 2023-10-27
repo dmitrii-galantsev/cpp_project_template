@@ -5,6 +5,7 @@ Checks:
   misc*,
   modernize*,
   performance*,
-  readability*,
   cppcoreguidelines*,
   -cppcoreguidelines-pro*,
+  -modernize-use-trailing-return-type,
+  -readability*,

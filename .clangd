@@ -14,10 +14,11 @@ Diagnostics:
           misc*,
           modernize*,
           performance*,
-          readability*,
           cppcoreguidelines*,
         ]
         Remove: [
           cppcoreguidelines-pro*,
+          readability*,
+          modernize-use-trailing-return-type,
         ]
         #CheckOptions:

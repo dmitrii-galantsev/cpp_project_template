@@ -44,6 +44,10 @@ endif()
 # Include CMAKE_INSTALL_* variables
 # this must go after project()
 include(GNUInstallDirs)
+# search for packages
+include(FindPkgConfig)
+
+#pkg_check_modules(DRM REQUIRED libdrm)
 
 add_subdirectory(functions)
 add_executable(main main.cpp)
@@ -52,6 +56,14 @@ target_link_libraries(main functions_lib)
 if(BUILD_TESTS)
     add_subdirectory("tests")
 endif()
+
+
+
+
+
+
+
+
 
 ### Useful debug stuff
 
