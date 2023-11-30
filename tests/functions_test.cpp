@@ -1,4 +1,5 @@
 #include "functions.hpp"
+
 #include <gtest/gtest.h>
 
 TEST(HelloTest, GtestSetup) {
