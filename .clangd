@@ -11,14 +11,16 @@ Diagnostics:
           abseil*,
           bugprone*,
           clang-analyzer*,
+          cppcoreguidelines*,
           misc*,
           modernize*,
-          performance*,
-          cppcoreguidelines*,
         ]
         Remove: [
+          cppcoreguidelines-avoid-magic-numbers,
           cppcoreguidelines-pro*,
-          readability*,
           modernize-use-trailing-return-type,
+          modernize-use-using,
+          performance*,
+          readability*,
         ]
         #CheckOptions:

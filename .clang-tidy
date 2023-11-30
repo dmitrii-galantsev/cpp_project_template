@@ -1,11 +1,15 @@
+# THIS FILE IS GENERATED FROM .clangd!
+# Run ./.update-clang-tidy.sh to regenerate.
 Checks:
   abseil*,
   bugprone*,
   clang-analyzer*,
+  cppcoreguidelines*,
   misc*,
   modernize*,
-  performance*,
-  cppcoreguidelines*,
+  -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-pro*,
   -modernize-use-trailing-return-type,
+  -modernize-use-using,
+  -performance*,
   -readability*,
