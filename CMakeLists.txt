@@ -32,14 +32,33 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--build-id=sha1")
 endif()
 
-## Add address sanitizer
-if(${ADDRESS_SANITIZER})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -shared-libasan")
-    message(STATUS "ADDRESS_SANITIZE: CMAKE_CXX_FLAGS=: ${CMAKE_CXX_FLAGS}")
-    message(STATUS "ADDRESS_SANITIZE: CMAKE_EXE_LINKER_FLAGS=: ${CMAKE_EXE_LINKER_FLAGS}")
-endif()
+## Address Sanitize Flag
+if (${ADDRESS_SANITIZER})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g -fno-omit-frame-pointer")
+    set(CMAKE_EXE_LINKER_FLAGS -fsanitize=address)
+
+    if (BUILD_SHARED_LIBS)
+        if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -shared-libasan")
+            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -shared-libasan")
+        endif()
+    else ()
+        if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libsan")
+        else()
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libasan")
+        endif()
+    endif ()
+else ()
+    ## Security breach mitigation flags
+    set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -DFORTIFY_SOURCE=2 -fstack-protector-all -Wcast-align")
+    ## More security breach mitigation flags
+    set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -Wl,-z,noexecstack -Wl,-znoexecheap -Wl,-z,relro ")
+    set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -Wtrampolines -Wl,-z,now")
+endif ()
 
 # Include CMAKE_INSTALL_* variables
 # this must go after project()
