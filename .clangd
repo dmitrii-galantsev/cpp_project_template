@@ -17,7 +17,9 @@ Diagnostics:
         ]
         Remove: [
           cppcoreguidelines-avoid-magic-numbers,
+          cppcoreguidelines-owning-memory,
           cppcoreguidelines-pro*,
+          cppcoreguidelines-virtual-class-destructor,
           modernize-use-trailing-return-type,
           modernize-use-using,
           performance*,

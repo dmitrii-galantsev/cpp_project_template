@@ -1,8 +1,10 @@
-#include "functions/bad_std_copy.hpp"
+#include "functions/type_traits.hpp"
 
 int main() {
-    // access_types();
-    // bad_std_copy();
+    int status = 0;
+    // status += access_types();
+    // status += bad_std_copy();
+    status += type_traits();
 
-    return 0;
+    return status;
 }
