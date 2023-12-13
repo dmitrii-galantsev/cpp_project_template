@@ -1,9 +1,11 @@
-#include "type_traits.hpp"
+#include "smart_pointers.hpp"
 
+#include <boost/core/demangle.hpp>
 #include <cassert>
 #include <cstddef>
 #include <cstdio>
 #include <iostream>
+#include <list>
 #include <memory>
 #include <string_view>
 #include <type_traits>
@@ -23,9 +25,9 @@ class B : public A {
 public:
     B() = default;  // data = 123
     B(const B&) = default;
-    B(B&&) = delete;
+    B(B&&) = default;
     B& operator=(const B&) = default;
-    B& operator=(B&&) = delete;
+    B& operator=(B&&) = default;
     ~B() = default;
 
     explicit B(int data) : data(data) {}  // data = this.data
@@ -81,40 +83,36 @@ int basic_traits() {
 
 class Holder {
 public:
-    Holder();
-    std::size_t get_size();
-    void print_data();
+    Holder() = default;
+    std::size_t get_size() { return objects.size(); }
+    void print_data() {
+        std::cout << "{\n";
+        for (auto& a : objects) {
+            std::cout << "  " << a->get_data() << ",\n";
+        }
+        std::cout << "}\n";
+    }
     template <typename T>
-    void append(std::shared_ptr<T>);
-    void incr_all();
+    void append(std::shared_ptr<T> a) {
+        static_assert(std::is_base_of_v<A, T>);
+        objects.insert(a);
+    }
+    // convert unique_ptr to shared_ptr by consuming it
+    template <typename T>
+    void append(std::unique_ptr<T> a) {
+        append(std::shared_ptr<T>(std::move(a)));
+    }
+    void incr_all() {
+        for (auto& a : objects) {
+            a->set_data(a->get_data() + 1);
+        }
+    }
 
 private:
     std::unordered_set<std::shared_ptr<A>> objects;
 };
 
-Holder::Holder() = default;
-std::size_t Holder::get_size() { return objects.size(); }
-void Holder::print_data() {
-    std::cout << "{\n";
-    for (auto& a : objects) {
-        std::cout << "  " << a->get_data() << ",\n";
-    }
-    std::cout << "}\n";
-}
-
-template <typename T>
-void Holder::append(std::shared_ptr<T> a) {
-    static_assert(std::is_base_of_v<A, T>);
-    objects.insert(a);
-}
-
-void Holder::incr_all() {
-    for (auto& a : objects) {
-        a->set_data(a->get_data() + 1);
-    }
-}
-
-int funky_traits() {
+int shared_pointers() {
     Holder holder;
     std::cout << "holder->get_size() = " << holder.get_size() << "\n";
 
@@ -167,13 +165,37 @@ int funky_traits() {
     holder.print_data();
     assert(holder.get_size() == 4);
 
+    // demonstrate using unique_ptr
+    holder.append(std::make_unique<B>(1234567));
+    holder.print_data();
+    assert(holder.get_size() == 5);
+
     return 0;
 }
 
-int type_traits() {
+// BASE CASE
+template <typename T>
+void print_types(T a) {
+    std::cout << boost::core::demangle(typeid(T).name()) << "\n";
+}
+
+// RECURSIVE CASE
+template <typename T, typename... TArgs>
+void print_types(T a, TArgs... args) {
+    print_types(a);
+    print_types(args...);
+}
+
+int print_types() {
+    print_types('a', 5, 5.0F);
+    return 0;
+}
+
+int smart_pointers() {
     int status = 0;
     // status += basic_traits();
-    status += funky_traits();
+    // status += shared_pointers();
+    print_types();
 
     return status;
 }

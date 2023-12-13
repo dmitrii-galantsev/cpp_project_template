@@ -1,0 +1,1 @@
+int smart_pointers();
