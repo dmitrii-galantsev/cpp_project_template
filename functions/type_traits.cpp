@@ -41,8 +41,9 @@ class C : public A {
 public:
     C() = default;
     int get_data() override { return 420; }
-    std::string_view say_hi() { return "hello from C!"; }
+    // don't care about setting. this function will do nothing
     void set_data(int data) override {}
+    std::string_view say_hi() { return "hello from C!"; }
 };
 
 int basic_traits() {
@@ -155,6 +156,16 @@ int funky_traits() {
     // sizes or uses shouldn't have changed
     assert(holder.get_size() == 2);
     assert(b_ptr.use_count() == 0);
+
+    // just to make sure different types work
+    holder.append(std::make_shared<C>());
+    holder.print_data();
+    assert(holder.get_size() == 3);
+
+    // and to make sure different objects work (even if underlying data is the same)
+    holder.append(std::make_shared<C>());
+    holder.print_data();
+    assert(holder.get_size() == 4);
 
     return 0;
 }
