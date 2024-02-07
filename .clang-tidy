@@ -7,6 +7,7 @@ Checks:
   cppcoreguidelines*,
   misc*,
   modernize*,
+  -cppcoreguidelines-avoid-do-while,
   -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro*,
