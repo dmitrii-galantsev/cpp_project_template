@@ -1,6 +1,5 @@
 #include "smart_pointers.hpp"
 
-#include <boost/core/demangle.hpp>
 #include <cassert>
 #include <cstddef>
 #include <cstdio>
@@ -176,7 +175,7 @@ int shared_pointers() {
 // BASE CASE
 template <typename T>
 void print_types(T a) {
-    std::cout << boost::core::demangle(typeid(T).name()) << "\n";
+    //std::cout << boost::core::demangle(typeid(T).name()) << "\n";
 }
 
 // RECURSIVE CASE
