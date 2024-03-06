@@ -5,7 +5,8 @@ set(SOURCES
     access_types.cpp
     bad_std_copy.cpp
     smart_pointers.cpp
-    try_amdsmi.cpp)
+    try_amdsmi.cpp
+    try_scandir.cpp)
 
 set(ROCM_DIR "/opt/rocm-dev2/" CACHE PATH "ROCm directory")
 find_package(SMI
