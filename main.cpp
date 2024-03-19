@@ -1,4 +1,5 @@
 #include "functions/smart_pointers.hpp"
+#include "functions/timing.hpp"
 #include "functions/try_scandir.hpp"
 
 int main() {
@@ -6,7 +7,8 @@ int main() {
     // status += access_types();
     // status += bad_std_copy();
     // status += smart_pointers();
-    status += try_scandir();
+    // status += try_scandir();
+    status += timing();
 
     return status;
 }
