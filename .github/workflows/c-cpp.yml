@@ -16,4 +16,4 @@ jobs:
     - name: configure
       run: cmake -B build
     - name: compile
-      run: cmake -B build --build
+      run: cmake --build build
