@@ -13,5 +13,6 @@ if(Boost_FOUND)
     set(SOURCES ${SOURCES} smart_pointers.cpp)
 endif()
 
-add_library(functions_lib STATIC ${SOURCES})
+add_library(functions_lib SHARED ${SOURCES})
 target_compile_options(functions_lib PUBLIC -Wall -pedantic -Wextra -Wconversion -Wsign-conversion)
+install(TARGETS functions_lib)
