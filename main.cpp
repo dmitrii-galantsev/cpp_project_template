@@ -1,6 +1,7 @@
 #include "functions/access_types.hpp"
 #include "functions/bad_std_copy.hpp"
 #include "functions/functions.hpp"
+#include "functions/my_fork.hpp"
 #include "functions/my_map.hpp"
 #include "functions/smart_pointers.hpp"
 #include "functions/timing.hpp"
@@ -14,7 +15,8 @@ int main() {
     // status += smart_pointers();
     // status += try_scandir();
     // status += timing();
-    status += my_map();
+    // status += my_map();
+    status += my_fork();
 
     return status;
 }

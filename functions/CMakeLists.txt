@@ -6,7 +6,8 @@ set(SOURCES
     bad_std_copy.cpp
     try_scandir.cpp
     timing.cpp
-    my_map.cpp)
+    my_map.cpp
+    my_fork.cpp)
 
 find_package(Boost 1.36.0)
 if(Boost_FOUND)
