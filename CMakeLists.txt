@@ -82,8 +82,9 @@ include(FindPkgConfig)
 #pkg_check_modules(DRM REQUIRED libdrm)
 
 add_subdirectory(functions)
+add_subdirectory(hsa_functions)
 add_executable(main main.cpp)
-target_link_libraries(main PUBLIC functions_lib)
+target_link_libraries(main PUBLIC functions_lib hsa_functions_lib)
 # Help main find functions_lib.so after install
 set_target_properties(main
     PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")

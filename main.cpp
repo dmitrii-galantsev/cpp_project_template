@@ -6,6 +6,7 @@
 #include "functions/smart_pointers.hpp"
 #include "functions/timing.hpp"
 #include "functions/try_scandir.hpp"
+#include "hsa_functions/my_rocprofiler.hpp"
 
 int main() {
     int status = 0;
@@ -16,7 +17,9 @@ int main() {
     // status += try_scandir();
     // status += timing();
     // status += my_map();
-    status += my_fork();
+    // status += my_fork();
+    status += my_rocprofiler();
+    status += my_rocprofiler();
 
     return status;
 }
