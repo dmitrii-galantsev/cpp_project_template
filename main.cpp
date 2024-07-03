@@ -10,9 +10,9 @@ int main() {
     // status += access_types();
     // status += bad_std_copy();
     // status += smart_pointers();
-    // status += try_amdsmi();
+    status += try_amdsmi();
     // status += try_scandir();
-    status += timing();
+    // status += timing();
 
     return status;
 }
