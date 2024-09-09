@@ -28,13 +28,23 @@ if(CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.4.0)
 endif()
 
 # Default libdir to "lib", this skips GNUInstallDirs from trying to take a guess if it's unset:
-set(CMAKE_INSTALL_LIBDIR "lib" CACHE STRING "Library install directory")
+set(CMAKE_INSTALL_LIBDIR
+    "lib"
+    CACHE STRING "Library install directory")
 
 # Let libraries be found using rpath
-set(CMAKE_SHARED_LINKER_FLAGS_INIT "-Wl,--enable-new-dtags,--rpath,\$ORIGIN" CACHE STRING "Linker flags INIT")
-set(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,--enable-new-dtags,--rpath,\$ORIGIN:\$ORIGIN/../lib" CACHE STRING "Linker flags INIT")
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE CACHE BOOL "Use link path for install RPATH")
-set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE CACHE BOOL "Set all RPATH to be ORIGIN-based")
+set(CMAKE_SHARED_LINKER_FLAGS_INIT
+    "-Wl,--enable-new-dtags,--rpath,\$ORIGIN"
+    CACHE STRING "Linker flags INIT")
+set(CMAKE_EXE_LINKER_FLAGS_INIT
+    "-Wl,--enable-new-dtags,--rpath,\$ORIGIN:\$ORIGIN/../lib"
+    CACHE STRING "Linker flags INIT")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH
+    TRUE
+    CACHE BOOL "Use link path for install RPATH")
+set(CMAKE_BUILD_RPATH_USE_ORIGIN
+    TRUE
+    CACHE BOOL "Set all RPATH to be ORIGIN-based")
 
 # Clang does not set the build-id
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -43,16 +53,13 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif()
 
 ## Address Sanitize Flag
-if (NOT ${ADDRESS_SANITIZER})
+if(NOT ${ADDRESS_SANITIZER})
     ## Security breach mitigation flags
-    set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -DFORTIFY_SOURCE=2 -fstack-protector-all -Wcast-align")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DFORTIFY_SOURCE=2 -fstack-protector-all -Wcast-align")
     ## More security breach mitigation flags
-    set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -Wl,-z,noexecstack -Wl,-znoexecheap -Wl,-z,relro ")
-    set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -Wtrampolines -Wl,-z,now")
-endif ()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,noexecstack -Wl,-znoexecheap -Wl,-z,relro ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wtrampolines -Wl,-z,now")
+endif()
 
 # Include CMAKE_INSTALL_* variables
 # this must go after project()
@@ -66,8 +73,7 @@ add_subdirectory(functions)
 add_executable(main main.cpp)
 target_link_libraries(main PUBLIC functions_lib)
 # Help main find functions_lib.so after install
-set_target_properties(main
-    PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
+set_target_properties(main PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
 install(TARGETS main)
 
 if(BUILD_TESTS)
@@ -103,7 +109,6 @@ foreach(_var_name ${_var_names})
         message(STATUS "${_var_name}=${${_var_name}}")
     endif()
 endforeach()
-
 
 # trace a run
 # trace CMakeLists.txt line-by-line:
