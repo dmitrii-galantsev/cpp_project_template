@@ -31,7 +31,7 @@ void pass_by_pointer(int *arg) {
     printf("arg: %p:%d\n", reinterpret_cast<void *>(arg), *arg);
 }
 
-void functions() {
+int functions() {
     int my_int = 0;
     printf("initial\n");
     printf("my_int = %d\n\n", my_int);
@@ -43,4 +43,6 @@ void functions() {
     printf("pass_by_reference\n");
     pass_by_reference(my_int);
     printf("my_int = %d\n\n", my_int);
+
+    return 0;
 }

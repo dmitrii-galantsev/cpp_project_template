@@ -43,26 +43,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif()
 
 ## Address Sanitize Flag
-if (${ADDRESS_SANITIZER})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g -fno-omit-frame-pointer")
-    set(CMAKE_EXE_LINKER_FLAGS_INIT "${CMAKE_EXE_LINKER_FLAGS_INIT} -fsanitize=address")
-    set(CMAKE_SHARED_LINKER_FLAGS_INIT "${CMAKE_SHARED_LINKER_FLAGS_INIT} -fsanitize=address")
-
-    if (BUILD_SHARED_LIBS)
-        if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            set(CMAKE_EXE_LINKER_FLAGS_INIT "${CMAKE_EXE_LINKER_FLAGS_INIT} -shared-libasan")
-            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -shared-libasan")
-        endif()
-    else ()
-        if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            set(CMAKE_EXE_LINKER_FLAGS_INIT "${CMAKE_EXE_LINKER_FLAGS_INIT} -static-libsan")
-            set(CMAKE_SHARED_LINKER_FLAGS_INIT "${CMAKE_SHARED_LINKER_FLAGS_INIT} -static-libsan")
-        else()
-            set(CMAKE_EXE_LINKER_FLAGS_INIT "${CMAKE_EXE_LINKER_FLAGS_INIT} -static-libasan")
-            set(CMAKE_SHARED_LINKER_FLAGS_INIT "${CMAKE_SHARED_LINKER_FLAGS_INIT} -static-libasan")
-        endif()
-    endif ()
-else ()
+if (NOT ${ADDRESS_SANITIZER})
     ## Security breach mitigation flags
     set(CMAKE_CXX_FLAGS
       "${CMAKE_CXX_FLAGS} -DFORTIFY_SOURCE=2 -fstack-protector-all -Wcast-align")
@@ -113,6 +94,16 @@ endfunction()
 # print properties
 cmake_print_properties(TARGETS main PROPERTIES INCLUDE_DIRECTORIES LINK_LIBRARIES)
 cmake_print_properties(SOURCES main PROPERTIES LOCATION)
+
+# print all variables starting with "main"
+get_cmake_property(_var_names VARIABLES)
+list(SORT _var_names)
+foreach(_var_name ${_var_names})
+    if(_var_name MATCHES "^main")
+        message(STATUS "${_var_name}=${${_var_name}}")
+    endif()
+endforeach()
+
 
 # trace a run
 # trace CMakeLists.txt line-by-line:
