@@ -100,18 +100,15 @@ int try_amdsmi() {
     std::vector<amdsmi_socket_handle> sockets(socket_count);
     status = amdsmi_get_socket_handles(&socket_count, sockets.data());
     LOG(status);
-    fetch_smi_field(0);
-    status = amdsmi_shut_down();
-    return 0;
     for (auto& socket : sockets) {
         char name[50];
         status = amdsmi_get_socket_info(socket, 50, name);
-        std::cout << "Socket name: " << name << "\n";
+        std::cout << "  Socket name: " << name << "\n";
 
         uint32_t processor_count = 0;
         status = amdsmi_get_processor_handles(socket, &processor_count, nullptr);
         LOG(status);
-        std::cout << "Processor count: " << processor_count << "\n";
+        std::cout << "  Processor count: " << processor_count << "\n";
 
         std::vector<amdsmi_processor_handle> processors(processor_count);
         status = amdsmi_get_processor_handles(socket, &processor_count, processors.data());
@@ -119,14 +116,15 @@ int try_amdsmi() {
         for (auto& processor : processors) {
             processor_type_t processor_type = AMDSMI_PROCESSOR_TYPE_UNKNOWN;
             status = amdsmi_get_processor_type(processor, &processor_type);
-            std::cout << "Processor type: " << processor_type << "\n";
+            std::cout << "    Processor type: " << processor_type << "\n";
             amdsmi_board_info_t board_info;
             status = amdsmi_get_gpu_board_info(processor, &board_info);
-            std::cout << "Board name: " << board_info.model_number << "\n";
+            std::cout << "    Board name: " << board_info.model_number << "\n";
             amdsmi_asic_info_t info;
             status = amdsmi_get_gpu_asic_info(processor, &info);
-            std::cout << "Asic info: " << info.market_name << "\n";
+            std::cout << "    Asic info: " << info.market_name << "\n";
         }
+        std::cout << "\n";
     }
 
     status = amdsmi_shut_down();
