@@ -68,7 +68,7 @@ namespace {
 class counter_sampler {
 public:
     // Setup system profiling for an agent
-    counter_sampler(rocprofiler_agent_id_t agent);
+    explicit counter_sampler(rocprofiler_agent_id_t agent);
 
     ~counter_sampler();
 
@@ -401,7 +401,7 @@ int main() {
     rocprofiler_is_initialized(&status);
     std::cout << "is rocp initialized?: [" << status << "]\n";
 
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     std::cout << "is rocp still initialized?: [" << status << "]\n";
     std::cout << "stop!\n";
