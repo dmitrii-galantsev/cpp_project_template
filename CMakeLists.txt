@@ -69,9 +69,13 @@ include(FindPkgConfig)
 
 #pkg_check_modules(DRM REQUIRED libdrm)
 
+find_package(rocprofiler-sdk REQUIRED
+        HINTS /opt/rocm/lib/cmake
+)
+
 add_subdirectory(functions)
 add_executable(main main.cpp)
-target_link_libraries(main PUBLIC functions_lib)
+target_link_libraries(main PUBLIC functions_lib rocprofiler-sdk::rocprofiler-sdk)
 # Help main find functions_lib.so after install
 set_target_properties(main PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
 install(TARGETS main)
