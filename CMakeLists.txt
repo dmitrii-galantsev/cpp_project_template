@@ -22,6 +22,12 @@ set(CMAKE_CXX_EXTENSIONS
     OFF
     CACHE BOOL "")
 
+# ROCM_DIR should be passed in via command line
+set(ROCM_DIR "/opt/rocm" CACHE PATH "ROCm directory.")
+if(DEFINED ROCM_PATH)
+    message(WARNING "ROCM_PATH is not used by the build process! Did you mean to set ROCM_DIR instead?")
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.4.0)
     message("Compiler version is " ${CMAKE_CXX_COMPILER_VERSION})
     message(FATAL_ERROR "Require at least gcc-5.4.0")
@@ -69,9 +75,19 @@ include(FindPkgConfig)
 
 #pkg_check_modules(DRM REQUIRED libdrm)
 
+find_package(rocprofiler-sdk
+    HINTS ${ROCM_DIR}/lib/cmake
+    CONFIGURE REQUIRED)
+find_package(hsa-runtime64
+    NAMES hsa-runtime64
+    HINTS ${ROCM_DIR}/lib/cmake
+    CONFIGURE REQUIRED)
+
+
 add_subdirectory(functions)
 add_executable(main main.cpp)
 target_link_libraries(main PUBLIC functions_lib)
+target_link_libraries(main PUBLIC hsa-runtime64::hsa-runtime64 rocprofiler-sdk::rocprofiler-sdk)
 # Help main find functions_lib.so after install
 set_target_properties(main PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
 install(TARGETS main)
