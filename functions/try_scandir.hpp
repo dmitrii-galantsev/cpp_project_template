@@ -1,1 +1,0 @@
-int try_scandir();
