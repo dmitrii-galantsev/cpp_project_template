@@ -13,8 +13,8 @@ namespace fs = std::filesystem;
 const fs::path drm_path = "/sys/class/drm";
 std::vector<fs::path> gpu_metric_files = {};
 typedef struct {
-    std::byte major;
-    std::byte minor;
+    uint8_t major;
+    uint8_t minor;
     uint16_t gfx_activity;
 } gpu_metrics_t;
 
@@ -64,7 +64,7 @@ void find_gpu_metric() {
 }
 
 void print_version(fs::path& path) {
-    gpu_metrics_t metrics;
+    gpu_metrics_t metric;
 
     std::ifstream file(path, std::ios::binary);
     if (!file) {
@@ -85,16 +85,23 @@ void print_version(fs::path& path) {
     file.read(reinterpret_cast<char*>(buffer.data()), filesize);
 
     size_t pos = 0x02;
-    metrics.major = buffer.at(pos);
-    metrics.minor = buffer.at(pos + 1);
+    metric.major = static_cast<uint8_t>(buffer.at(pos));
+    metric.minor = static_cast<uint8_t>(buffer.at(pos + 1));
 
-    pos = 0x0c;
-    metrics.gfx_activity =
+    if (metric.minor >= 0 && metric.minor <= 3) {
+        pos = 0x10;
+    } else if (metric.minor >= 4) {
+        pos = 0x0c;
+    } else {
+        fmt::print("Unknown minor version: {}\n", metric.minor);
+        return;
+    }
+    metric.gfx_activity =
         (static_cast<uint16_t>(buffer.at(pos)) | static_cast<uint16_t>(buffer.at(pos + 1)) << 8);
 
     // fmt::print("[{:04x}] = {:02}.{:02}\n", pos, metrics.major, metrics.minor);
 
-    fmt::print("{}\n", metrics);
+    fmt::print("{}\n", metric);
 }
 
 int main() {
