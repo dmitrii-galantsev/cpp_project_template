@@ -80,10 +80,7 @@ include(FindPkgConfig)
 
 #pkg_check_modules(DRM REQUIRED libdrm)
 
-add_subdirectory(functions)
 add_executable(main main.cpp)
-target_link_libraries(main PUBLIC functions_lib)
-# Help main find functions_lib.so after install
 set_target_properties(main PROPERTIES INSTALL_RPATH "\$ORIGIN/../lib")
 install(TARGETS main)
 
@@ -93,11 +90,13 @@ endif()
 
 ### Useful debug stuff
 
-### TODO: DELETE
-# print variables
 include(CMakePrintHelpers)
-cmake_print_variables(CMAKE_CXX_STANDARD)
-# function to print vars
+# Usage: print(VARIABLE[s])
+# Examples:
+#   print(CMAKE_CXX_STANDARD)
+#   -- CMAKE_CXX_STANDARD="17"
+#   print(CMAKE_CXX_STANDARD CMAKE_CXX_FLAGS)
+#   -- CMAKE_CXX_STANDARD="17" ; CMAKE_CXX_FLAGS=" -Wall -Wextra -m64 -msse -msse2 -ggdb -O0 -DDEBUG"
 function(print)
     message("--")
     cmake_print_variables(${ARGN})
@@ -106,7 +105,6 @@ function(print_fatal)
     print(${ARGN})
     message(FATAL_ERROR "--- last print")
 endfunction()
-### TODO: DELETE
 
 # print properties
 cmake_print_properties(TARGETS main PROPERTIES INCLUDE_DIRECTORIES LINK_LIBRARIES)
