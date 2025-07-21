@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.21)
 
 set(SOURCES
     functions.hpp functions.cpp
@@ -10,10 +10,10 @@ set(SOURCES
     timing.cpp timing.hpp)
 
 set(ROCM_DIR "/opt/rocm/" CACHE PATH "ROCm directory")
-find_package(SMI
+find_package(amd_smi
     NAMES amd_smi
     HINTS ${ROCM_DIR}/lib/cmake
-    CONFIGURE REQUIRED)
+    CONFIG REQUIRED)
 set(SMI_INC_DIR "${AMD_SMI_INCLUDE_DIR}" CACHE INTERNAL "AMD SMI include directory.")
 set(SMI_LIB_DIR "${AMD_SMI_LIB_DIR}" CACHE INTERNAL "AMD SMI library directory.")
 
