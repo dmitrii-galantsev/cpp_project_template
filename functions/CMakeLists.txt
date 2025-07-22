@@ -17,11 +17,14 @@ find_package(amd_smi
 set(SMI_INC_DIR "${AMD_SMI_INCLUDE_DIR}" CACHE INTERNAL "AMD SMI include directory.")
 set(SMI_LIB_DIR "${AMD_SMI_LIB_DIR}" CACHE INTERNAL "AMD SMI library directory.")
 
+add_definitions("-DENABLE_ESMI_LIB=1")
+
 if(NOT EXISTS "${SMI_INC_DIR}" OR NOT EXISTS "${SMI_LIB_DIR}")
     message(FATAL_ERROR "amd_smi not found in ${SMI_INC_DIR}. Please
     make sure amd_smi is installed and present in ${SMI_INC_DIR}.")
 endif()
-add_library(functions_lib SHARED ${SOURCES})
+add_library(functions_lib STATIC ${SOURCES})
+#add_library(functions_lib SHARED ${SOURCES})
 target_include_directories(functions_lib PUBLIC ${SMI_INC_DIR})
 target_link_libraries(functions_lib amd_smi)
 target_compile_options(functions_lib PUBLIC -Wall -pedantic -Wextra -Wconversion -Wsign-conversion)
