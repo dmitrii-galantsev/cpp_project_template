@@ -5,6 +5,7 @@ set(SOURCES
     access_types.hpp access_types.cpp
     bad_std_copy.hpp bad_std_copy.cpp
     #smart_pointers.hpp smart_pointers.cpp
+    try_amdsmi_mutex.cpp try_amdsmi_mutex.hpp
     try_amdsmi.cpp try_amdsmi.hpp
     try_scandir.cpp try_scandir.hpp
     timing.cpp timing.hpp)
