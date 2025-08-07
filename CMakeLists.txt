@@ -22,6 +22,7 @@ project(main LANGUAGES CXX)
 
 option(BUILD_TESTS "Build test suite" OFF)
 option(ADDRESS_SANITIZER "Enable address sanitizer" OFF)
+option(THREAD_SANITIZER "Enable thread sanitizer" ON)
 
 set(CMAKE_CXX_STANDARD
     17
@@ -70,6 +71,13 @@ if(NOT ${ADDRESS_SANITIZER})
     ## More security breach mitigation flags
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,noexecstack -Wl,-znoexecheap -Wl,-z,relro ")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wtrampolines -Wl,-z,now")
+endif()
+
+if(${THREAD_SANITIZER})
+    ## Thread sanitizer flags
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=thread")
 endif()
 
 # Include CMAKE_INSTALL_* variables

@@ -24,6 +24,11 @@ void print_amdsmi_error(const char* function_name, amdsmi_status_t status, int t
 }
 // Thread function implementation
 void amdsmi_thread_func(int thread_id) {
+    // Initialize AMDSMI
+    auto status = amdsmi_init(AMDSMI_INIT_AMD_GPUS);
+    if (status != AMDSMI_STATUS_SUCCESS) {
+        print_amdsmi_error("amdsmi_init", status, thread_id);
+    }
     {
         std::lock_guard<std::mutex> lock(cout_mutex);
         std::cout << "Thread " << thread_id << " initialized " << std::endl;
@@ -36,7 +41,7 @@ void amdsmi_thread_func(int thread_id) {
     // Get number of devices
     uint32_t num_devices = 2;
     std::vector<amdsmi_socket_handle> socket_handles(num_devices);
-    auto status = amdsmi_get_socket_handles(&num_devices, socket_handles.data());
+    status = amdsmi_get_socket_handles(&num_devices, socket_handles.data());
     if (status != AMDSMI_STATUS_SUCCESS) {
         print_amdsmi_error("amdsmi_get_gpu_asic_info", status, thread_id);
     }
@@ -116,6 +121,15 @@ void amdsmi_thread_func(int thread_id) {
             print_amdsmi_error("amdsmi_get_gpu_kfd_info", status, thread_id);
         }
     }
+
+    // Each thread that calls amdsmi_init() should also call amdsmi_shut_down()
+    status = amdsmi_shut_down();
+    if (status != AMDSMI_STATUS_SUCCESS) {
+        print_amdsmi_error("amdsmi_shut_down", status, thread_id);
+    } else {
+        std::lock_guard<std::mutex> lock(cout_mutex);
+        std::cout << "Thread " << thread_id << " shut down AMDSMI successfully" << std::endl;
+    }
 }
 
 int try_amdsmi_mutex(int argc, char* argv[]) {
@@ -135,12 +149,7 @@ int try_amdsmi_mutex(int argc, char* argv[]) {
             thread_count = DEFAULT_THREAD_COUNT;
         }
     }
-    // Initialize AMDSMI
-    amdsmi_status_t status = amdsmi_init(AMDSMI_INIT_AMD_GPUS);
     int thread_id = 12345;  // Placeholder for thread ID, can be set per thread if needed
-    if (status != AMDSMI_STATUS_SUCCESS) {
-        print_amdsmi_error("amdsmi_init", status, thread_id);
-    }
     std::cout << "Starting AMDSMI demo with " << thread_count << " threads..." << std::endl;
     // Create threads
     std::vector<std::thread> threads;
@@ -152,14 +161,7 @@ int try_amdsmi_mutex(int argc, char* argv[]) {
     for (auto& thread : threads) {
         thread.join();
     }
-    // Shutdown AMDSMI
-    status = amdsmi_shut_down();
-    if (status != AMDSMI_STATUS_SUCCESS) {
-        print_amdsmi_error("amdsmi_shut_down", status, thread_id);
-    } else {
-        std::lock_guard<std::mutex> lock(cout_mutex);
-        std::cout << "Thread " << thread_id << ": AMDSMI shut down successfully" << std::endl;
-    }
+
     std::cout << "All threads completed successfully." << std::endl;
     return 0;
 }
